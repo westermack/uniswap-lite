@@ -10,7 +10,7 @@ const Balance = ({ tokenBalance }) => {
         {tokenBalance ? (
           <>
             <span className={styles.balanceBold}>Balance: </span>
-            {formatUnits(tokenBalance ?? parseUnits("0"))}
+            {parseFloat(formatUnits(tokenBalance ?? parseUnits("0"))).toLocaleString()}
           </>
         ) : (
           ""

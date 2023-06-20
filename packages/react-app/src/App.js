@@ -23,8 +23,8 @@ const App = () => {
         </header>
 
         <div className={styles.exchangeContainer}>
-          <h1 className={styles.headTitle}>Uniswap 2.0</h1>
-          <p className={styles.subTitle}>Exchange tokens in seconds</p>
+          <h1 className={styles.headTitle}>Uniswap Lite</h1>
+          <p className={styles.subTitle}>Exchange tokens in seconds!</p>
 
           <div className={styles.exchangeBoxWrapper}>
             <div className={styles.exchangeBox}>
@@ -32,12 +32,12 @@ const App = () => {
               <div className={styles.exchange}>
                 {account ? (
                   poolsLoading ? (
-                    <Loader title="Loading pools, please wait!" />
+                    <Loader title="Loading liquidity pools, please wait..." />
                   ) : (
                     <Exchange pools={pools} />
                   )
                 ) : (
-                  <Loader title="Please connect your wallet" />
+                  <Loader title="Please connect your wallet." />
                 )}
               </div>
               <div className="blue_gradient" />

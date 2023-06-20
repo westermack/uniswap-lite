@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { abis } from "@my-app/contracts";
-import { ERC20, useContractFunction, useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
+import {
+  ERC20,
+  useContractFunction,
+  useEthers,
+  useTokenAllowance,
+  useTokenBalance,
+} from "@usedapp/core";
 import { ethers } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 
-import  { getAvailableTokens, getCounterpartTokens, findPoolByTokens, isOperationPending, getFailureMessage, getSuccessMessage } from '../utils';
+import {
+  getAvailableTokens,
+  getCounterpartTokens,
+  findPoolByTokens,
+  isOperationPending,
+  getFailureMessage,
+  getSuccessMessage,
+} from "../utils";
 import { ROUTER_ADDRESS } from "../config";
 import AmountIn from "./AmountIn";
 import AmountOut from "./AmountOut";
@@ -17,21 +30,25 @@ const Exchange = ({ pools }) => {
   const [fromValue, setFromValue] = useState("0");
   const [fromToken, setFromToken] = useState(pools[0].token0Address); // initialFromToken
   const [toToken, setToToken] = useState("");
-  const [resetState, setResetState] = useState(false)
+  const [resetState, setResetState] = useState(false);
 
   const fromValueBigNumber = parseUnits(fromValue || "0"); // converse the string to bigNumber
   const availableTokens = getAvailableTokens(pools);
   const counterpartTokens = getCounterpartTokens(pools, fromToken);
-  const pairAddress = findPoolByTokens(pools, fromToken, toToken)?.address ?? "";
+  const pairAddress =
+    findPoolByTokens(pools, fromToken, toToken)?.address ?? "";
 
   const routerContract = new Contract(ROUTER_ADDRESS, abis.router02);
   const fromTokenContract = new Contract(fromToken, ERC20.abi);
   const fromTokenBalance = useTokenBalance(fromToken, account);
   const toTokenBalance = useTokenBalance(toToken, account);
-  const tokenAllowance = useTokenAllowance(fromToken, account, ROUTER_ADDRESS) || parseUnits("0");
+  const tokenAllowance =
+    useTokenAllowance(fromToken, account, ROUTER_ADDRESS) || parseUnits("0");
   const approvedNeeded = fromValueBigNumber.gt(tokenAllowance);
   const formValueIsGreaterThan0 = fromValueBigNumber.gt(parseUnits("0"));
-  const hasEnoughBalance = fromValueBigNumber.lte(fromTokenBalance ?? parseUnits("0"));
+  const hasEnoughBalance = fromValueBigNumber.lte(
+    fromTokenBalance ?? parseUnits("0")
+  );
 
   // approve initiating a contract call (similar to use state) -> gives the state and the sender...
   const { state: swapApproveState, send: swapApproveSend } =
@@ -49,7 +66,11 @@ const Exchange = ({ pools }) => {
   const isApproving = isOperationPending(swapApproveState);
   const isSwapping = isOperationPending(swapExecuteState);
   const canApprove = !isApproving && approvedNeeded;
-  const canSwap = !approvedNeeded && !isSwapping && formValueIsGreaterThan0 && hasEnoughBalance;
+  const canSwap =
+    !approvedNeeded &&
+    !isSwapping &&
+    formValueIsGreaterThan0 &&
+    hasEnoughBalance;
 
   const successMessage = getSuccessMessage(swapApproveState, swapExecuteState);
   const failureMessage = getFailureMessage(swapApproveState, swapExecuteState);
@@ -89,14 +110,14 @@ const Exchange = ({ pools }) => {
   };
 
   useEffect(() => {
-    if(failureMessage || successMessage) {
+    if (failureMessage || successMessage) {
       setTimeout(() => {
-        setResetState(true)
-        setFromValue("0")
-        setToToken("")
-      }, 5000)
+        setResetState(true);
+        setFromValue("0");
+        setToToken("");
+      }, 5000);
     }
-  }, [failureMessage, successMessage])
+  }, [failureMessage, successMessage]);
 
   return (
     <div className="flex flex-col w-full items-center">

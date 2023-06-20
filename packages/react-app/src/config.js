@@ -1,10 +1,11 @@
-import { Goerli } from "@usedapp/core";
+import { Sepolia } from "@usedapp/core";
+import env from "./env.js";
 
-export const ROUTER_ADDRESS = "0x6E71cfbc04eF15db5CcB942f2e4C78efCDD02833";
+export const ROUTER_ADDRESS = env.ROUTER_CONTRACT_ADDRESS;
 
 export const DAPP_CONFIG = {
-  readOnlyChainId: Goerli.chainId,
+  readOnlyChainId: Sepolia.chainId,
   readOnlyUrls: {
-    [Goerli.chainId]: "https://eth-goerli.g.alchemy.com/v2/VFVeT3J9yUX9SZs4FStpZUZSJyIUolda",
+    [Sepolia.chainId]: env.PROVIDER_API,
   },
 };
